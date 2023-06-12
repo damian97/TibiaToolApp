@@ -5,6 +5,7 @@ public class Searcher {
     private String serverName;
     private int vocationId;
     private int skillId;
+    private int pageIndex = 1;
 
     private int lvlStart, lvlStop;
     private int skillStart, skillStop;
@@ -56,6 +57,6 @@ public class Searcher {
                 "filter_skillrangeto=" + skillStop + "&" +
                 "order_column=101&" +
                 "order_direction=1&" +
-                "searchtype=1&currentpage=1";
+                "searchtype=1&currentpage=" + pageIndex;
     }
 }
