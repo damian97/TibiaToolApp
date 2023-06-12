@@ -1,12 +1,23 @@
 package org.TibiaApp;
 
 import javax.swing.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class GUI extends JFrame {
     private final int WIDTH = 600;
     private final int HEIGHT = 400;
+    private int charsIndex;
+
+    private JTextField lvlStart, lvlStop;
+    private JTextField skillStart, skillStop;
+
+    JButton searchButton;
     private DefaultListModel<String> nickListModel;
-    private String[] serverOptions = {
+    private JComboBox<String> serverComboBox;
+    private JComboBox<String> vocationComboBox;
+    private JComboBox<String> skillComboBox;
+    protected String[] serverOptions = {
             "Worlds",
             "Adra", "Alumbra", "Antica", "Ardera", "Astera", "Axera", "Bastia", "Batabra", "Belobra", "Bombra",
             "Bona", "Cadebra", "Calmera", "Castela", "Celebra", "Celesta", "Collabra", "Damora", "Descubra", "Dia",
@@ -19,53 +30,59 @@ public class GUI extends JFrame {
             "Visabra", "Vitera", "Vunira", "Wintera", "Wizera", "Xandebra", "Yonabra", "Zenobra", "Zuna", "Zunera"
     };
 
-    String[] checkBoxLabels = {"Wracks", "Banuta LF", "Walls", "Fury Oramond", "Glooth's",
+    private String[] checkBoxLabels = {"Wracks", "Banuta LF", "Walls", "Fury Oramond", "Glooth's",
             "Exotic cave/pirates", "Inq done", "Crit/Mana/HP (Power)", "Baby Rosh", "Checkbox 10"};
 
     public GUI() {
         super("Tibia Tool App");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
+        charsIndex = 0;
 
         nickListModel = new DefaultListModel<>();
-        nickListModel.addElement("Nick1");
-        nickListModel.addElement("Nick2");
-        nickListModel.addElement("Nick3");
-        nickListModel.addElement("Nick4");
-        nickListModel.addElement("Nick5");
+        addCharacter("Nick11" , "tibia.com");
+        addCharacter("Nick1" , "tibia.com");
+
+
 
         JList<String> nickList = new JList<>(nickListModel);
         JScrollPane nickScrollPane = new JScrollPane(nickList);
         nickScrollPane.setBounds(10, 10, 175, HEIGHT - 55);
 
-        JComboBox<String> serverComboBox = new JComboBox<>(serverOptions);
+        serverComboBox = new JComboBox<>(serverOptions);
         serverComboBox.setBounds(200, 20, 135, 25);
 
         String[] vocationOptions = {"Vocations", "Druid", "Knight", "Paladin", "Sorcerer"};
-        JComboBox<String> vocationComboBox = new JComboBox<>(vocationOptions);
+        vocationComboBox = new JComboBox<>(vocationOptions);
         vocationComboBox.setBounds(345, 20, 115, 25);
 
-        String[] skillOptions = {"Axe", "Club", "Sword", "Distance", "Magic"};
-        JComboBox<String> skillComboBox = new JComboBox<>(skillOptions);
+        String[] skillOptions = {"Skill", "Axe", "Club", "Sword", "Distance", "Magic"};
+        skillComboBox = new JComboBox<>(skillOptions);
         skillComboBox.setBounds(470, 20, 100, 25);
 
         JLabel textFieldLabel1 = new JLabel("Lvl Range:");
         textFieldLabel1.setBounds(210, 60, 60, 25);
-        JTextField lvlStart = new JTextField();
+        lvlStart = new JTextField();
         lvlStart.setBounds(300, 60, 90, 25);
 
-        JTextField lvlStop = new JTextField();
+        JLabel textFieldLabel5 = new JLabel("--");
+        textFieldLabel5.setBounds(400, 60, 60, 25);
+
+        JLabel textFieldLabel6 = new JLabel("--");
+        textFieldLabel6.setBounds(400, 90, 60, 25);
+
+        lvlStop = new JTextField();
         lvlStop.setBounds(420, 60, 90, 25);
 
         JLabel textFieldLabel3 = new JLabel("Skill Range:");
         textFieldLabel3.setBounds(207, 90, 80, 25);
-        JTextField skillStart = new JTextField();
+        skillStart = new JTextField();
         skillStart.setBounds(300, 90, 90, 25);
 
-        JTextField skillStop = new JTextField();
+        skillStop = new JTextField();
         skillStop.setBounds(420, 90, 90, 25);
 
-        JButton searchButton = new JButton("Search");
+        searchButton = new JButton("Search");
         searchButton.setBounds(250, 290, 150, 50);
 
         JCheckBox[] checkBoxes = new JCheckBox[checkBoxLabels.length];
@@ -83,6 +100,8 @@ public class GUI extends JFrame {
         add(lvlStart);
         add(lvlStop);
         add(textFieldLabel3);
+        add(textFieldLabel5);
+        add(textFieldLabel6);
         add(skillStart);
         add(skillStop);
         add(searchButton);
@@ -91,6 +110,79 @@ public class GUI extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
     }
+
+    public void addCharacter(String nick, String link) {
+
+        nickListModel.addElement(nick);
+        System.out.println("Dodano postać o nicku: " + nick + " do listy. Index postaci: " + charsIndex++);
+        System.out.println("Link do aukcji: " + link);
+
+    }
+
+    public String getServerComboBox() {
+        String serverName = (String)serverComboBox.getSelectedItem();
+        assert serverName != null;
+        if (serverName.equals("Worlds")) {
+            return "";
+        } else {
+            return serverName;
+        }
+    }
+
+    public int getVocationComboBox() {
+        int vocIndex = vocationComboBox.getSelectedIndex();
+        if (vocIndex > 0) {
+            vocIndex++;
+        }
+        return vocIndex;
+    }
+
+    public int getSkillComboBox() {
+        switch (skillComboBox.getSelectedIndex()) {
+            case 1 :
+                return 10;
+            case 2 :
+                return 9;
+            case 3 :
+                return 8;
+            case 4 :
+                return 7;
+            case 5 :
+                return 1;
+            default:
+                return 0;
+        }
+    }
+
+
+    public int getLvlStart() {
+        if (lvlStart.getText().equals("")) {
+            return 0;
+        }
+        return Integer.parseInt(lvlStart.getText());
+    }
+
+    public int getLvlStop() {
+        if (lvlStop.getText().equals("")) {
+            return 0;
+        }
+        return Integer.parseInt(lvlStop.getText());
+    }
+
+    public int getSkillStart() {
+        if (skillStart.getText().equals("")) {
+            return 0;
+        }
+        return Integer.parseInt(skillStart.getText());
+    }
+
+    public int getSkillStop() {
+        if (skillStop.getText().equals("")) {
+            return 0;
+        }
+        return Integer.parseInt(skillStop.getText());
+    }
+
 
 }
 
