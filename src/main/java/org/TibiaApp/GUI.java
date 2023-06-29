@@ -40,10 +40,8 @@ public class GUI extends JFrame {
         charsIndex = 0;
 
         nickListModel = new DefaultListModel<>();
-        addCharacter("Nick11" , "tibia.com");
-        addCharacter("Nick1" , "tibia.com");
-
-
+//        addCharacter("Nick11" , "tibia.com");
+//        addCharacter("Nick1" , "tibia.com");
 
         JList<String> nickList = new JList<>(nickListModel);
         JScrollPane nickScrollPane = new JScrollPane(nickList);
@@ -117,6 +115,10 @@ public class GUI extends JFrame {
         System.out.println("Dodano postać o nicku: " + nick + " do listy. Index postaci: " + charsIndex++);
         System.out.println("Link do aukcji: " + link);
 
+    }
+
+    public void clearList() {
+        nickListModel.clear();
     }
 
     public String getServerComboBox() {

@@ -1,5 +1,13 @@
 package org.TibiaApp;
 
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+
 public class Searcher {
     private String link;
     private String serverName;
@@ -59,4 +67,71 @@ public class Searcher {
                 "order_direction=1&" +
                 "searchtype=1&currentpage=" + pageIndex;
     }
+
+
+    public String[] searchCharsNick() {
+        Connection connect = Jsoup.connect(getLink());
+        Document document = null;
+        try {
+            document = connect.get();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Elements allH1 = document.getElementsByClass("AuctionCharacterName");
+
+        String[] tmpTable = new String[allH1.size()];
+        for (int i = 0; i < allH1.size(); i++) {
+            System.out.println(allH1.get(i).text());
+            tmpTable[i] = allH1.get(i).text();
+        }
+
+        return tmpTable;
+    }
+
+
+
+    public String[] searchCharsLink() {
+        Connection connect = Jsoup.connect(getLink());
+        Document document = null;
+        try {
+            document = connect.get();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Elements allH2 = document.select("a");
+
+        String[] tmpTable = new String[allH2.size()];
+
+        for (int j = 0; j < allH2.size(); j++) {
+            Element link = allH2.get(j);
+            String href = link.attr("href");
+
+            if (href.contains("page=details&auctionid=") && j % 2 == 0) {
+                tmpTable[j] = href;
+            }
+        }
+
+        int counter = 0;
+        for (String x : tmpTable) {
+            if (x != null) {
+                counter++;
+            }
+        }
+
+        String[] tmpTable1 = new String[counter];
+
+        for (int i = 0, j = 0; i < tmpTable.length; i++) {
+            if (tmpTable[i] != null) {
+                tmpTable1[j] = tmpTable[i];
+                j++;
+            }
+
+        }
+
+        return tmpTable1;
+    }
+
+
 }

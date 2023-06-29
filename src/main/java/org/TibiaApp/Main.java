@@ -12,9 +12,19 @@ public class Main {
         gui.searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gui.addCharacter("Dupa", "adsad");
+//                gui.addCharacter("Dupa", "adsad");
                 Searcher searcher = new Searcher(gui.getServerComboBox(), gui.getVocationComboBox(), gui.getSkillComboBox(), gui.getLvlStart(), gui.getLvlStop(), gui.getSkillStart(), gui.getSkillStop());
                 System.out.println(searcher.toString());
+
+                gui.clearList();
+
+                String[] tabLink = searcher.searchCharsLink();
+                String[] tabNick = searcher.searchCharsNick();
+
+                for (int i = 0; i < tabNick.length; i++) {
+                    gui.addCharacter(tabNick[i], tabLink[i]);
+                }
+
             }
         });
 
